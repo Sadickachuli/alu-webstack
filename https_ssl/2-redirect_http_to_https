@@ -4,17 +4,6 @@ global
     chroot /var/lib/haproxy
     stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
     stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon 
-
-    # New commands
-        maxconn 2048
-        tune.ssl.default-dh-param 2048
-
-        # Default SSL material locations
-        ca-base /etc/ssl/certs
-        crt-base /etc/ssl/private
 
 defaults
     log     global
@@ -35,15 +24,11 @@ defaults
 frontend http_front
     bind *:80
     bind *:443 ssl crt /etc/letsencrypt/live/www.sadickworld.tech/fullchain.pem
-    bind *:443 ssl crt /etc/haproxy/certs/www.sadickworld.pem
-    http-request redirect scheme https unless { ssl_fc }
     http-request set-header X-Forwarded-Proto https
+    redirect scheme https if !{ ssl_fc }
     default_backend http_back
 
 backend http_back
     balance roundrobin
     server web-01 54.234.246.98:80 check
     server web-02 34.224.174.8:80 check
-
-backend letsencrypt-backend
-    server letsencrypt 3.91.157.251
