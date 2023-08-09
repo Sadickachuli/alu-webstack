@@ -34,11 +34,9 @@ defaults
 
 frontend http_front
     bind *:80
-<<<<<<< HEAD
     bind *:443 ssl crt /etc/letsencrypt/live/www.sadickworld.tech/fullchain.pem
-=======
     bind *:443 ssl crt /etc/haproxy/certs/www.sadickworld.pem
->>>>>>> 39e943083f8942d20ebb37931606eec204bd4256
+    http-request redirect scheme https unless { ssl_fc }
     http-request set-header X-Forwarded-Proto https
     default_backend http_back
 
