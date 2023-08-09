@@ -24,7 +24,7 @@ defaults
 frontend http_front
     bind *:80
     bind *:443 ssl crt /etc/letsencrypt/live/www.sadickworld.tech/fullchain.pem
-    reqadd X-Forwarded-Proto:\ https
+    http-request set-header X-Forwarded-Proto https
     default_backend http_back
 
 backend http_back
